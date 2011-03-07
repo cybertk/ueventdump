@@ -61,7 +61,6 @@ I(const char *msg, ...)
 
     va_start (ap, msg);
     vfprintf(stderr, msg, ap);
-    fprintf(stderr, "    errno: %s\n", strerror(errno));
     va_end (ap);
 }
 
@@ -72,6 +71,7 @@ E(const char *msg, ...)
 
     va_start(ap, msg);
     vfprintf(stderr, msg, ap);
+    fprintf(stderr, "\n    errno: %s\n", strerror(errno));
     va_end(ap);
 }
 
@@ -108,6 +108,7 @@ static int open_uevent_socket(void)
     setsockopt(s, SOL_SOCKET, SO_RCVBUFFORCE, &sz, sizeof(sz));
     setsockopt(s, SOL_SOCKET, SO_PASSCRED, &on, sizeof(on));
 
+    /* bind is a privalege syscall */
     if(bind(s, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
         close(s);
         return -1;
@@ -199,7 +200,7 @@ int main(int argc, char **argv)
 
     device_fd = open_uevent_socket();
     if (device_fd < 0) {
-        fprintf(stderr, "open_uevent_socket");
+        E("open_uevent_socket");
         goto oops;
     }
 
