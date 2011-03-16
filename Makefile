@@ -1,8 +1,8 @@
-all: dumpuevent senduevent
+all: ueventdump senduevent
 
-dumpuevent:
+ueventdump:
 
 senduevent:
 
 clean:
-	rm dumpuevent
+	rm ueventdump
